@@ -13,7 +13,7 @@ thing_limit = 1000
 sub = r.get_subreddit('LonghornNation').get_top_from_all(limit=thing_limit)
 
 dict = {}
-totalPosts = 0
+total = 0
 
 
 for posts in sub:
@@ -31,18 +31,24 @@ for posts in sub:
 totalPosts = 0
 topList = list()
 for x in dict:
-    tc = TopCommenter(x, dict.get(x))
-    totalPosts += 1
-    topList.append(tc)
+    if dict.get(x) > 5:
+        tc = TopCommenter(x, dict.get(x))
+        totalPosts += 1
+        total = total + tc.score
+        topList.append(tc)
 
 
-topList.sort(key=lambda y: y.score)
+topList.sort(key=lambda y: y.score, reverse=True)
 
+topCommenter = 1
 for y in topList:
-    print("User: ", y.user," Posts: ", y.score)
+    print(topCommenter, ") /u/", y.user, " has posted ", y.score, " posts in the top ", total, " posts of all time. ",
+          "{:.1f}".format(100*(y.score/total)), "% of all top posts  \n", sep='')
+    topCommenter += 1
 
 
-print("Total Posts: ", totalPosts)
+# print("Total Users: ", totalPosts)
+# print("Total Posts: ", total)
 
 
 # gen = user.get_submitted(limit=thing_limit)
